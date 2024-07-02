@@ -4,7 +4,7 @@ import unittest
 
 from faker import Faker
 
-from mailSlurp import create_mail_server, wait_for_mail_server
+from mailSlurpFile import create_mail_server, wait_for_mail_server
 from test_assesment.Register import registration
 from test_assesment.Verification import mail_verification
 
