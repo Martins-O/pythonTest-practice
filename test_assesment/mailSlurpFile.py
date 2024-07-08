@@ -28,3 +28,6 @@ def wait_for_mail_server(inbox_id):
 
     return otp_code
 
+
+if __name__ == '__main__':
+    print(wait_for_mail_server("818bc10e-4461-4735-bf4e-0910cb7577e7"))

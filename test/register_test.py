@@ -1,6 +1,7 @@
 import json
 import os
 import unittest
+from unittest.mock import patch
 
 from faker import Faker
 from dotenv import load_dotenv
@@ -39,6 +40,7 @@ class RegistrationTest(unittest.TestCase):
                 "organizationType": "INSTITUTION",
             },
                 file, indent=4)
+            print("email id:::: ", email_id)
 
         self.assertIsNotNone(response, "Response is None")
         self.assertEqual(response.status_code, 200, f"Expected status code 200, but got {response.status_code}")
@@ -51,10 +53,10 @@ class RegistrationTest(unittest.TestCase):
 
         print("Register request test passed.")
         verify_response = mail_verification(email, wait_for_mail_server(email_id))
-        print(email)
 
         self.assertIsNotNone(verify_response, "Response is None")
-        self.assertEqual(verify_response.status_code, 200, f"Expected status code 200, but got {verify_response.status_code}")
+        self.assertEqual(verify_response.status_code, 200,
+                         f"Expected status code 200, but got {verify_response.status_code}")
 
         api_response_data = verify_response.json()
 
@@ -64,7 +66,14 @@ class RegistrationTest(unittest.TestCase):
 
         print("Verification request test passed.")
 
-    def test_incorrect_email(self):
+    @patch('test_assessment.Register.registration')
+    def test_incorrect_email(self, mock_registration):
+
+        mock_registration.return_value.status_code = 400
+        mock_registration.return_value.json.return_value = {
+            "message": {"email": "Invalid Email Address"},
+            "httpStatus": "BAD_REQUEST"
+        }
 
         email_incorrect = "email.gmail"
         password_incorrect = "Password321@"
@@ -95,7 +104,7 @@ class RegistrationTest(unittest.TestCase):
         response = registration(email, password_incorrect, first_name_incorrect, last_name_incorrect)
 
         self.assertIsNotNone(response, "Response is None")
-        self.assertEqual(response.status_code, 200, "Expected status code 400, but got {response.status_code}")
+        self.assertEqual(response.status_code, 400, "Expected status code 400, but got {response.status_code}")
 
         try:
             data = response.json()

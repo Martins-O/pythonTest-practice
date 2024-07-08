@@ -1,3 +1,5 @@
+import os
+
 import requests
 
 base_url = "https://api-systest.enum.africa/api/v2/"
@@ -5,7 +7,7 @@ base_url = "https://api-systest.enum.africa/api/v2/"
 
 def registration(email, password, first_name, last_name):
 
-    url = base_url + "user/organization-signup"
+    url = os.getenv("BASE_URL") + "user/organization-signup"
 
     payload = {
         "email": email,

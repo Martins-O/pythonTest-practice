@@ -1,13 +1,10 @@
-import json
 import os
 
 import requests
 
-from test_assesment.Register import base_url
-
 
 def mail_verification(email_address, token):
-    url = base_url+"email/verify"
+    url = os.getenv("BASE_URL") + "email/verify"
 
     payload = {
         "email": email_address,
